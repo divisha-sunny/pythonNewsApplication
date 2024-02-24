@@ -1,5 +1,9 @@
+import io
+import webbrowser
 import requests
 from tkinter import * #imports all classes from tkinter
+from urllib.request import urlopen
+from PIL import ImageTk, Image
 
 class NewsApp:
 
@@ -23,6 +27,7 @@ class NewsApp:
         self.root = Tk()
         self.root.geometry('350x600')
         self.root.resizable(0,0)
+        self.root.title('News Application')
         self.root.configure(background='black')
     
     def clear(self):
@@ -36,6 +41,22 @@ class NewsApp:
         self.clear()
 
         # We have to display photo, heading, details
+
+        #Image
+
+        try:
+            img_url = self.data['articles'][index]['urlToImage']
+            raw_data = urlopen(img_url).read()
+            im = Image.open(io.BytesIO(raw_data)).resize((350,250))
+            photo = ImageTk.PhotoImage(im)
+        except:
+            img_url = 'https://images.wondershare.com/repairit/aticle/2021/07/resolve-images-not-showing-problem-1.jpg'
+            raw_data = urlopen(img_url).read()
+            im = Image.open(io.BytesIO(raw_data)).resize((350,250))
+            photo = ImageTk.PhotoImage(im)
+
+        label = Label(self.root, image = photo)
+        label.pack()
 
         #heading
 
@@ -51,6 +72,25 @@ class NewsApp:
         details.pack(pady=(2,20))
         details.config(font=('verdana', 12))
 
+        #Placing Buttons
+
+        frame = Frame(self.root, bg = 'black')
+        frame.pack(expand=True, fill = BOTH)
+
+        if (index != 0):
+            prev = Button(frame, text = 'Previous', width= 16, height= 3, command= lambda: self.load_news_item(index-1))
+            prev.pack(side=LEFT)
+
+        read = Button(frame, text = 'Read More', width= 16, height= 3, command= lambda: self.open_link(self.data['articles'][index]['url']))
+        read.pack(side=LEFT)
+
+        if (index != len(self.data['articles'])-1):
+            next = Button(frame, text = 'Next', width= 16, height= 3, command= lambda: self.load_news_item(index+1))
+            next.pack(side=LEFT)
+
         self.root.mainloop()
+    
+    def open_link(self, url):
+        webbrowser.open(url)
 
 Obj = NewsApp()
