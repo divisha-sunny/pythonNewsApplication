@@ -1,0 +1,1 @@
+This Python application displays the latest news in the USA. It utilizes the [[Top Headlines](https://newsapi.org/docs/endpoints/top-headlines)](url) endpoint provided by the News API to extract up-to-date news articles. The application is built using the 'tkinter' library in Python, providing a simple and intuitive graphical user interface.
